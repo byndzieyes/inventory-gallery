@@ -28,7 +28,9 @@ export default function AdminInventory() {
     }
   };
 
-  const handleView = (id: number) => alert(`Viewing item #${id}`);
+  const handleView = (id: number) => {
+    navigate(`/admin/details/${id}`);
+  };
   const handleEdit = (id: number) => {
     navigate(`/admin/edit/${id}`);
   };
