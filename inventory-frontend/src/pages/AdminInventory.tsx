@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { inventoryApi, type InventoryItem } from '../services/inventoryApi';
 import InventoryTable from '../components/inventory/InventoryTable';
 
@@ -7,6 +7,8 @@ export default function AdminInventory() {
   const [items, setItems] = useState<InventoryItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchItems();
@@ -27,7 +29,9 @@ export default function AdminInventory() {
   };
 
   const handleView = (id: number) => alert(`Viewing item #${id}`);
-  const handleEdit = (id: number) => alert(`Editing item #${id}`);
+  const handleEdit = (id: number) => {
+    navigate(`/admin/edit/${id}`);
+  };
 
   const handleDelete = async (id: number) => {
     if (confirm('Are you sure you want to delete this item?')) {
