@@ -1,4 +1,6 @@
 import { Routes, Route, Link, Navigate } from 'react-router-dom';
+import AdminInventory from './pages/AdminInventory';
+import AdminInventoryCreate from './pages/AdminInventoryCreate';
 
 function App() {
   return (
@@ -23,7 +25,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/gallery" replace />} />
 
-          <Route path="/admin" element={<div className="text-2xl font-bold">Lab 7</div>} />
+          <Route path="/admin" element={<AdminInventory />} />
+          <Route path="/admin/create" element={<AdminInventoryCreate />} />
 
           <Route path="/gallery" element={<div className="text-2xl font-bold">Lab 8</div>} />
         </Routes>
