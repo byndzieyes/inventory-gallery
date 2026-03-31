@@ -1,4 +1,5 @@
 /inventory-backend/node_modules
 /inventory-backend/uploads
+/inventory-backend/inventory.json
 
 /inventory-frontend/node_modules

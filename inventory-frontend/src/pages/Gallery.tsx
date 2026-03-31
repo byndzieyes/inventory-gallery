@@ -26,9 +26,20 @@ export default function Gallery() {
     try {
       setIsLoading(true);
       const response = await inventoryApi.getInventory();
-      setItems(response.data);
+      const fetchedItems = response.data;
+      setItems(fetchedItems);
+
+      setFavorites((prevFavorites) => {
+        const validFavorites = prevFavorites.filter((favId) => fetchedItems.some((item) => item.id === favId));
+
+        if (validFavorites.length !== prevFavorites.length) {
+          localStorage.setItem('inventory_favorites', JSON.stringify(validFavorites));
+        }
+
+        return validFavorites;
+      });
     } catch (err) {
-      setError(`Error loading inventory items: ${err}`);
+      setError(`Failed to load inventory items: ${err}`);
     } finally {
       setIsLoading(false);
     }

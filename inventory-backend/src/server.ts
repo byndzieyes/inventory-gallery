@@ -33,8 +33,28 @@ interface InventoryItem {
   photo: string | null;
 }
 
-let inventory: InventoryItem[] = [];
-let nextId = 1;
+const DB_FILE = path.join(__dirname, '../inventory.json');
+
+// Функція для читання даних з файлу
+const loadDatabase = (): InventoryItem[] => {
+  try {
+    if (fs.existsSync(DB_FILE)) {
+      const data = fs.readFileSync(DB_FILE, 'utf-8');
+      return data ? JSON.parse(data) : [];
+    }
+  } catch (error) {
+    console.error(`Error loading database: ${error}`);
+  }
+  return [];
+};
+
+// Функція для запису даних у файл
+const saveDatabase = (data: InventoryItem[]) => {
+  fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf-8');
+};
+
+let inventory: InventoryItem[] = loadDatabase();
+let nextId = inventory.length > 0 ? Math.max(...inventory.map((i) => i.id)) + 1 : 1;
 
 // 1. Отримати весь інвентар (GET /inventory)
 app.get('/inventory', (req: Request, res: Response) => {
@@ -64,6 +84,7 @@ app.post('/register', upload.single('photo'), (req: Request, res: Response): any
   };
 
   inventory.push(newItem);
+  saveDatabase(inventory);
   res.status(201).json(newItem);
 });
 
@@ -77,6 +98,7 @@ app.put('/inventory/:id', (req: Request, res: Response): any => {
   if (inventory_name) item.inventory_name = inventory_name;
   if (description !== undefined) item.description = description;
 
+  saveDatabase(inventory);
   res.json(item);
 });
 
@@ -91,6 +113,8 @@ app.put('/inventory/:id/photo', upload.single('photo'), (req: Request, res: Resp
       if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
     }
     item.photo = `/uploads/${req.file.filename}`;
+
+    saveDatabase(inventory);
   }
 
   res.json(item);
@@ -111,6 +135,7 @@ app.delete('/inventory/:id', (req: Request, res: Response): any => {
   }
 
   inventory.splice(index, 1);
+  saveDatabase(inventory);
   res.json({ message: 'Successfully deleted' });
 });
 
