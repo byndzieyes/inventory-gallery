@@ -1,4 +1,5 @@
 import { type InventoryItem } from '../../services/inventoryApi';
+import { Link } from 'react-router-dom';
 
 interface GalleryCardProps {
   item: InventoryItem;
@@ -39,9 +40,12 @@ export default function GalleryCard({ item, isFavorite, onToggleFavorite }: Gall
           {item.description || 'No description available.'}
         </p>
 
-        <button className="w-full py-2.5 bg-slate-900 text-white text-sm font-medium rounded-xl hover:bg-slate-800 transition-colors mt-auto">
+        <Link
+          to={`/gallery/${item.id}`}
+          className="w-full py-2.5 bg-slate-900 text-white text-sm font-medium rounded-xl hover:bg-slate-800 transition-colors mt-auto text-center block"
+        >
           View Details
-        </button>
+        </Link>
       </div>
     </div>
   );

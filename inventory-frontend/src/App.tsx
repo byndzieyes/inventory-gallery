@@ -4,6 +4,7 @@ import AdminInventoryCreate from './pages/AdminInventoryCreate';
 import AdminInventoryEdit from './pages/AdminInventoryEdit';
 import AdminInventoryDetails from './pages/AdminInventoryDetails';
 import Gallery from './pages/Gallery';
+import GalleryDetails from './pages/GalleryDetails';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           <Route path="/" element={<Navigate to="/gallery" replace />} />
 
           <Route path="/gallery" element={<Gallery />} />
+          <Route path="/gallery/:id" element={<GalleryDetails />} />
 
           <Route path="/admin" element={<AdminInventory />} />
           <Route path="/admin/create" element={<AdminInventoryCreate />} />

@@ -7,6 +7,7 @@ export default function Gallery() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [favorites, setFavorites] = useState<number[]>([]);
+  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
 
   useEffect(() => {
     fetchItems();
@@ -47,6 +48,8 @@ export default function Gallery() {
     });
   };
 
+  const displayedItems = showFavoritesOnly ? items.filter((item) => favorites.includes(item.id)) : items;
+
   if (isLoading)
     return <div className="text-center py-20 text-slate-500 animate-pulse font-medium text-lg">Loading gallery...</div>;
   if (error) return <div className="text-center py-20 text-rose-600 font-medium">{error}</div>;
@@ -59,20 +62,36 @@ export default function Gallery() {
           <p className="text-slate-500 mt-2">Choose the best and add to favorites.</p>
         </div>
 
-        <div className="bg-rose-50 px-4 py-2 rounded-xl border border-rose-100 flex items-center gap-2">
-          <span className="text-rose-500">❤️</span>
-          <span className="font-medium text-rose-700">Favorites: {favorites.length}</span>
-        </div>
+        <button
+          onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
+          className={`px-5 py-2.5 rounded-xl border flex items-center gap-2 transition-all shadow-sm ${
+            showFavoritesOnly
+              ? 'bg-rose-500 text-white border-rose-600 hover:bg-rose-600'
+              : 'bg-rose-50 text-rose-700 border-rose-100 hover:bg-rose-100'
+          }`}
+        >
+          <span>{showFavoritesOnly ? '❤️' : '🤍'}</span>
+          <span className="font-bold">{showFavoritesOnly ? 'Show All' : `Favorites: ${favorites.length}`}</span>
+        </button>
       </div>
 
-      {items.length === 0 ? (
+      {displayedItems.length === 0 ? (
         <div className="text-center py-20 bg-white rounded-3xl border border-slate-200">
-          <h3 className="text-xl font-bold text-slate-900 mt-4">Sorry, no items available</h3>
-          <p className="text-slate-500 mt-2">The administrator has not added any inventory to the warehouse yet.</p>
+          <h3 className="text-xl font-bold text-slate-900 mt-4">
+            {showFavoritesOnly ? "You haven't added any items to favorites yet." : 'No items found in the inventory.'}
+          </h3>
+          {showFavoritesOnly && (
+            <button
+              onClick={() => setShowFavoritesOnly(false)}
+              className="mt-4 text-indigo-600 font-medium hover:underline"
+            >
+              Back to all items
+            </button>
+          )}
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {items.map((item) => (
+          {displayedItems.map((item) => (
             <GalleryCard
               key={item.id}
               item={item}
